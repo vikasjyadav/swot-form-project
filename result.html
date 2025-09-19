@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SWOT Result</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .result-card {
+      margin-top: 30px;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      opacity: 0;
+      transform: scale(0.8);
+      animation: popIn 0.8s ease-out forwards;
+    }
+
+    .strengths { background: #34a853; }
+    .weaknesses { background: #ea4335; }
+    .opportunities { background: #4285f4; }
+    .threats { background: #fbbc05; color: #333; }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      60% { opacity: 1; transform: scale(1.05); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    h1 {
+      font-size: 40px;
+      margin: 10px 0;
+      animation: glow 1.5s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px rgba(255,255,255,0.6); }
+      to { text-shadow: 0 0 20px rgba(255,255,255,1); }
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: normal;
+      line-height: 1.5;
+    }
+
+    #resetBtn {
+      margin-top: 25px;
+      padding: 12px 20px;
+      font-size: 18px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    #resetBtn:hover {
+      transform: scale(1.1);
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2 style="text-align:center; color:#4285f4;">✨ Your SWOT Result ✨</h2>
+    <div id="result"></div>
+    <div style="text-align:center;">
+      <button id="resetBtn">🔄 Reset & Try Again</button>
+    </div>
+  </div>
+
+  <script>
+    // Get data from URL
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get("name");
+    const branch = params.get("branch");
+    const domain = params.get("domain");
+
+    // Pick CSS class based on domain
+    let domainClass = "";
+    let message = "";
+    if (domain === "Strengths") {
+      domainClass = "strengths";
+      message = "💪 You are confident and resourceful. Keep building on your strengths, take leadership opportunities, and mentor others!";
+    } else if (domain === "Weaknesses") {
+      domainClass = "weaknesses";
+      message = "🌱 Don’t worry! Weaknesses are areas for growth. Focus on time management, self-discipline, and seek constructive feedback.";
+    } else if (domain === "Opportunities") {
+      domainClass = "opportunities";
+      message = "🚀 You are curious and open to growth. Keep exploring new tools, certifications, and networking to unlock your full potential!";
+    } else if (domain === "Threats") {
+      domainClass = "threats";
+      message = "⚡ Challenges may worry you, but every threat is a chance to learn. Build confidence, embrace failure as feedback, and stay resilient!";
+    }
+
+    // Show result card with motivation
+    document.getElementById("result").innerHTML = `
+      <div class="result-card ${domainClass}">
+        <p><strong>${name}</strong> from <strong>${branch}</strong></p>
+        <p>belongs to</p>
+        <h1>${domain}</h1>
+        <p class="message">${message}</p>
+      </div>
+    `;
+
+    // Reset button → go back to form
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
