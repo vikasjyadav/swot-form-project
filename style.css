@@ -1,3 +1,8 @@
+/* Ensure padding + border don’t break layout */
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335);
@@ -54,6 +59,7 @@ input[type="text"] {
   border: 2px solid #ccc;
   font-size: 16px;
   transition: 0.2s ease;
+  box-sizing: border-box; /* ✅ Fix for mobile overflow */
 }
 
 input[type="text"]:focus {
