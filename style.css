@@ -9,7 +9,6 @@ body {
   min-height: 100vh;
 }
 
-/* Background animation */
 @keyframes gradientMove {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -27,7 +26,6 @@ body {
   animation: fadeIn 1s ease;
 }
 
-/* Fade-in effect */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -40,13 +38,12 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* Section headers */
 label {
   display: block;
   margin-top: 15px;
   font-weight: bold;
   font-size: clamp(14px, 3vw, 16px);
-  color: #34a853; /* green header text */
+  color: #34a853;
 }
 
 input[type="text"] {
@@ -63,31 +60,25 @@ input[type="text"]:focus {
   border-color: #4285f4;
   box-shadow: 0 0 6px rgba(66,133,244,0.6);
   outline: none;
-  background: #f0f7ff; /* light blue highlight */
+  background: #f0f7ff;
 }
 
-/* Questions get colorful cards */
 .question {
   margin-top: 20px;
   padding: 15px;
   border-radius: 10px;
-  transition: transform 0.2s ease;
-  border-left: 6px solid #4285f4; /* accent border */
+  border-left: 6px solid #4285f4;
   background: linear-gradient(90deg, #f1f3f4, #ffffff);
 }
 
 .question:nth-child(odd) {
-  background: linear-gradient(90deg, #fef7e0, #ffffff); /* light yellow */
+  background: linear-gradient(90deg, #fef7e0, #ffffff);
   border-left-color: #fbbc05;
 }
 
 .question:nth-child(even) {
-  background: linear-gradient(90deg, #e8f5e9, #ffffff); /* light green */
+  background: linear-gradient(90deg, #e8f5e9, #ffffff);
   border-left-color: #34a853;
-}
-
-.question:hover {
-  transform: scale(1.01);
 }
 
 .question p {
@@ -105,7 +96,7 @@ input[type="text"]:focus {
 
 .question input[type="radio"] {
   margin-right: 8px;
-  accent-color: #4285f4; /* color for radio buttons */
+  accent-color: #4285f4;
 }
 
 button {
@@ -124,4 +115,63 @@ button {
 button:hover {
   transform: scale(1.05);
   background: linear-gradient(135deg, #3367d6, #0f9d58);
+}
+
+/* ✅ Result card styling */
+.result-card {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4285f4, #34a853);
+  color: white;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  animation: fadeIn 0.8s ease;
+}
+
+.result-card h1 {
+  font-size: 28px;
+  margin: 10px 0;
+  text-transform: uppercase;
+}
+
+.result-card .message {
+  font-size: 16px;
+  font-weight: normal;
+  margin-top: 10px;
+}
+
+/* ⚠️ Inline error messages */
+#errorBox {
+  background: #ffebee;
+  border: 1px solid #e53935;
+  color: #b71c1c;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  display: none; /* hidden by default, shown only when errors appear */
+}
+
+/* 📱 Mobile tweaks */
+@media (max-width: 480px) {
+  .form-container {
+    padding: 15px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+  .question {
+    padding: 10px;
+  }
+  .result-card h1 {
+    font-size: 22px;
+  }
+  .result-card .message {
+    font-size: 14px;
+  }
+  button {
+    padding: 12px;
+    font-size: 16px;
+  }
 }
