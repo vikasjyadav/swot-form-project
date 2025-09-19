@@ -3,115 +3,131 @@
 <head>
   <meta charset="UTF-8">
   <title>SWOT Result</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+
+  <!-- Chart.js + Datalabels -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
   <style>
-    .result-card {
+    .chart-container {
       margin-top: 30px;
-      padding: 30px;
+      background: #fff;
+      padding: 20px;
       border-radius: 15px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-      color: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      opacity: 0;
-      transform: scale(0.8);
-      animation: popIn 0.8s ease-out forwards;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
-
-    .strengths { background: #34a853; }
-    .weaknesses { background: #ea4335; }
-    .opportunities { background: #4285f4; }
-    .threats { background: #fbbc05; color: #333; }
-
-    @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.8); }
-      60% { opacity: 1; transform: scale(1.05); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    h1 {
-      font-size: 40px;
-      margin: 10px 0;
-      animation: glow 1.5s infinite alternate;
-    }
-
-    @keyframes glow {
-      from { text-shadow: 0 0 10px rgba(255,255,255,0.6); }
-      to { text-shadow: 0 0 20px rgba(255,255,255,1); }
-    }
-
-    .message {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: normal;
-      line-height: 1.5;
-    }
-
-    #resetBtn {
-      margin-top: 25px;
-      padding: 12px 20px;
-      font-size: 18px;
-      background: #333;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s ease;
-    }
-    #resetBtn:hover {
-      transform: scale(1.1);
-      background: #000;
+    canvas {
+      max-width: 400px;
+      margin: auto;
+      display: block;
     }
   </style>
 </head>
 <body>
   <div class="form-container">
     <h2 style="text-align:center; color:#4285f4;">✨ Your SWOT Result ✨</h2>
+    
+    <!-- ✅ Result section -->
     <div id="result"></div>
+
+    <!-- Circle Graph -->
+    <div class="chart-container">
+      <canvas id="swotChart"></canvas>
+    </div>
+
     <div style="text-align:center;">
       <button id="resetBtn">🔄 Reset & Try Again</button>
     </div>
   </div>
 
   <script>
-    // Get data from URL
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get("name");
-    const branch = params.get("branch");
-    const domain = params.get("domain");
+    window.onload = () => {
+      // ✅ Get values from URL
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get("name") || "Unknown User";
+      const branch = params.get("branch") || "Unknown Branch";
+      const domain = params.get("domain") || "No Domain";
+      const strengths = parseInt(params.get("strengths")) || 0;
+      const weaknesses = parseInt(params.get("weaknesses")) || 0;
+      const opportunities = parseInt(params.get("opportunities")) || 0;
+      const threats = parseInt(params.get("threats")) || 0;
 
-    // Pick CSS class based on domain
-    let domainClass = "";
-    let message = "";
-    if (domain === "Strengths") {
-      domainClass = "strengths";
-      message = "💪 You are confident and resourceful. Keep building on your strengths, take leadership opportunities, and mentor others!";
-    } else if (domain === "Weaknesses") {
-      domainClass = "weaknesses";
-      message = "🌱 Don’t worry! Weaknesses are areas for growth. Focus on time management, self-discipline, and seek constructive feedback.";
-    } else if (domain === "Opportunities") {
-      domainClass = "opportunities";
-      message = "🚀 You are curious and open to growth. Keep exploring new tools, certifications, and networking to unlock your full potential!";
-    } else if (domain === "Threats") {
-      domainClass = "threats";
-      message = "⚡ Challenges may worry you, but every threat is a chance to learn. Build confidence, embrace failure as feedback, and stay resilient!";
-    }
+      // ✅ Motivational message
+      let message = "";
+      if (domain === "Strengths") {
+        message = "💪 You are confident and resourceful. Keep building on your strengths!";
+      } else if (domain === "Weaknesses") {
+        message = "🌱 Weaknesses are areas for growth. Focus on self-improvement and consistency.";
+      } else if (domain === "Opportunities") {
+        message = "🚀 You are curious and open to growth. Keep exploring new opportunities!";
+      } else if (domain === "Threats") {
+        message = "⚡ Challenges may worry you, but every threat is a chance to grow stronger!";
+      }
 
-    // Show result card with motivation
-    document.getElementById("result").innerHTML = `
-      <div class="result-card ${domainClass}">
-        <p><strong>${name}</strong> from <strong>${branch}</strong></p>
-        <p>belongs to</p>
-        <h1>${domain}</h1>
-        <p class="message">${message}</p>
-      </div>
-    `;
+      // ✅ Show result card
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = ""; // clear old data
 
-    // Reset button → go back to form
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      window.location.href = "index.html";
-    });
+      const card = document.createElement("div");
+      card.className = "result-card";
+
+      const p1 = document.createElement("p");
+      p1.innerHTML = "<strong>" + name + "</strong> from <strong>" + branch + "</strong>";
+      card.appendChild(p1);
+
+      const p2 = document.createElement("p");
+      p2.textContent = "belongs to";
+      card.appendChild(p2);
+
+      const h1 = document.createElement("h1");
+      h1.textContent = domain;
+      card.appendChild(h1);
+
+      const p3 = document.createElement("p");
+      p3.className = "message";
+      p3.textContent = message;
+      card.appendChild(p3);
+
+      resultDiv.appendChild(card);
+
+      // ✅ Total answers
+      const total = strengths + weaknesses + opportunities + threats;
+
+      // ✅ Chart.js doughnut chart with percentages
+      const ctx = document.getElementById("swotChart").getContext("2d");
+      new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: ["Strengths", "Weaknesses", "Opportunities", "Threats"],
+          datasets: [{
+            data: [strengths, weaknesses, opportunities, threats],
+            backgroundColor: ["#34a853", "#ea4335", "#4285f4", "#fbbc05"]
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "bottom" },
+            datalabels: {
+              color: "#fff",
+              font: { weight: "bold", size: 14 },
+              formatter: (value) => {
+                let percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                return value > 0 ? percentage + "%" : "";
+              }
+            }
+          }
+        },
+        plugins: [ChartDataLabels]
+      });
+
+      // ✅ Reset button → back to form
+      document.getElementById("resetBtn").addEventListener("click", () => {
+        window.location.href = "index.html";
+      });
+    };
   </script>
 </body>
 </html>
