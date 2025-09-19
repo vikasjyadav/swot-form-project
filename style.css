@@ -3,6 +3,11 @@
   box-sizing: border-box;
 }
 
+/* Prevent any form elements from overflowing */
+form, input, button {
+  max-width: 100%;
+}
+
 body {
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335);
@@ -53,13 +58,15 @@ label {
 
 input[type="text"] {
   width: 100%;
+  max-width: 100%;   /* ✅ prevent overflow */
   padding: 10px;
   margin-top: 5px;
   border-radius: 6px;
   border: 2px solid #ccc;
   font-size: 16px;
   transition: 0.2s ease;
-  box-sizing: border-box; /* ✅ Fix for mobile overflow */
+  box-sizing: border-box; /* ✅ include padding + border */
+  display: block;         /* ✅ prevent inline sizing issues */
 }
 
 input[type="text"]:focus {
