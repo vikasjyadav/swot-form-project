@@ -16,78 +16,18 @@ const questions = [
 
 // Options for each question
 const questionOptions = [
-  [
-    "A. With confidence and planning",
-    "B. With hesitation and second-guessing",
-    "C. With curiosity to learn new things",
-    "D. With concern about failure"
-  ],
-  [
-    "A. Leader or coordinator",
-    "B. Passive or withdrawn",
-    "C. Creative idea contributor",
-    "D. Avoid conflict; fear criticism"
-  ],
-  [
-    "A. Use it to improve myself",
-    "B. Take it personally and feel demotivated",
-    "C. Seek mentoring or coaching to grow",
-    "D. Feel threatened or anxious"
-  ],
-  [
-    "A. Always meet deadlines and plan ahead",
-    "B. Procrastinate or get overwhelmed",
-    "C. Attend time-management webinars or read productivity books",
-    "D. Get distracted or lose motivation frequently"
-  ],
-  [
-    "A. Confidently explore and self-learn",
-    "B. Avoid using it unless absolutely necessary",
-    "C. See it as a chance to upskill",
-    "D. Feel anxious about being left behind"
-  ],
-  [
-    "A. Clear, persuasive, and impactful",
-    "B. Hesitant and underconfident",
-    "C. Keen to participate in public speaking or writing contests",
-    "D. Worry about being misunderstood or judged"
-  ],
-  [
-    "A. I constantly work on improving myself",
-    "B. I rarely reflect on areas I need to grow",
-    "C. I actively look for learning programs or workshops",
-    "D. I feel overwhelmed by how fast things are changing"
-  ],
-  [
-    "A. Excited and ready to adapt",
-    "B. Uncertain and uncomfortable",
-    "C. Curious about what I can gain from it",
-    "D. Afraid of making mistakes"
-  ],
-  [
-    "A. Follow trends and actively network",
-    "B. Don’t make time to stay current",
-    "C. Enroll in online courses or attend industry events",
-    "D. Feel insecure about rapidly changing knowledge"
-  ],
-  [
-    "A. Reflect and bounce back stronger",
-    "B. Dwell on the failure and feel disheartened",
-    "C. Look for coaching or mentorship to improve",
-    "D. Fear trying again due to potential failure"
-  ],
-  [
-    "A. Strong connections in and out of the industry",
-    "B. Very limited or rarely interact",
-    "C. Regularly try to expand and attend events",
-    "D. Intimidated to approach new people"
-  ],
-  [
-    "A. I’m well-prepared to grab them",
-    "B. I feel underqualified or unprepared",
-    "C. I actively explore career fairs, internships, and certifications",
-    "D. I worry I’ll miss out due to competition"
-  ]
+  ["A. With confidence and planning","B. With hesitation and second-guessing","C. With curiosity to learn new things","D. With concern about failure"],
+  ["A. Leader or coordinator","B. Passive or withdrawn","C. Creative idea contributor","D. Avoid conflict; fear criticism"],
+  ["A. Use it to improve myself","B. Take it personally and feel demotivated","C. Seek mentoring or coaching to grow","D. Feel threatened or anxious"],
+  ["A. Always meet deadlines and plan ahead","B. Procrastinate or get overwhelmed","C. Attend time-management webinars or read productivity books","D. Get distracted or lose motivation frequently"],
+  ["A. Confidently explore and self-learn","B. Avoid using it unless absolutely necessary","C. See it as a chance to upskill","D. Feel anxious about being left behind"],
+  ["A. Clear, persuasive, and impactful","B. Hesitant and underconfident","C. Keen to participate in public speaking or writing contests","D. Worry about being misunderstood or judged"],
+  ["A. I constantly work on improving myself","B. I rarely reflect on areas I need to grow","C. I actively look for learning programs or workshops","D. I feel overwhelmed by how fast things are changing"],
+  ["A. Excited and ready to adapt","B. Uncertain and uncomfortable","C. Curious about what I can gain from it","D. Afraid of making mistakes"],
+  ["A. Follow trends and actively network","B. Don’t make time to stay current","C. Enroll in online courses or attend industry events","D. Feel insecure about rapidly changing knowledge"],
+  ["A. Reflect and bounce back stronger","B. Dwell on the failure and feel disheartened","C. Look for coaching or mentorship to improve","D. Fear trying again due to potential failure"],
+  ["A. Strong connections in and out of the industry","B. Very limited or rarely interact","C. Regularly try to expand and attend events","D. Intimidated to approach new people"],
+  ["A. I’m well-prepared to grab them","B. I feel underqualified or unprepared","C. I actively explore career fairs, internships, and certifications","D. I worry I’ll miss out due to competition"]
 ];
 
 // Render questions dynamically
@@ -107,36 +47,34 @@ questions.forEach((q, i) => {
   questionsDiv.appendChild(div);
 });
 
-// (same questions + rendering code as before)
+// Add error container
+const form = document.getElementById("swotForm");
+const errorBox = document.createElement("div");
+errorBox.id = "errorBox";
+errorBox.style.color = "red";
+errorBox.style.margin = "10px 0";
+form.prepend(errorBox);
 
 // Handle form submission
-document.getElementById("swotForm").addEventListener("submit", function(e) {
+form.addEventListener("submit", function(e) {
   e.preventDefault();
+  errorBox.textContent = ""; // clear previous errors
 
   const name = document.getElementById("name").value.trim();
   const branch = document.getElementById("branch").value.trim();
 
-  // Validate Name and Branch
-  if (!name) {
-    alert("⚠️ Please enter your Name.");
-    return;
-  }
-  if (!branch) {
-    alert("⚠️ Please enter your Branch.");
-    return;
-  }
+  if (!name) { errorBox.textContent = "⚠️ Please enter your Name."; return; }
+  if (!branch) { errorBox.textContent = "⚠️ Please enter your Branch."; return; }
 
   let strengths = 0, weaknesses = 0, opportunities = 0, threats = 0;
 
-  // Validate all questions
   for (let i = 0; i < questions.length; i++) {
     const ansInput = document.querySelector(`input[name="q${i}"]:checked`);
     if (!ansInput) {
-      alert(`⚠️ Please answer Question ${i + 1} before submitting.`);
+      errorBox.textContent = `⚠️ Please answer Question ${i + 1} before submitting.`;
       return;
     }
     const ans = ansInput.value;
-
     if(ans === "A") strengths++;
     else if(ans === "B") weaknesses++;
     else if(ans === "C") opportunities++;
@@ -150,6 +88,6 @@ document.getElementById("swotForm").addEventListener("submit", function(e) {
   if(opportunities > maxVal) { domain = "Opportunities"; maxVal = opportunities; }
   if(threats > maxVal) { domain = "Threats"; maxVal = threats; }
 
-  // Redirect to result page with data in URL
-  window.location.href = `result.html?name=${encodeURIComponent(name)}&branch=${encodeURIComponent(branch)}&domain=${encodeURIComponent(domain)}`;
+  // ✅ Redirect with ALL values
+  window.location.href = `result.html?name=${encodeURIComponent(name)}&branch=${encodeURIComponent(branch)}&domain=${encodeURIComponent(domain)}&strengths=${strengths}&weaknesses=${weaknesses}&opportunities=${opportunities}&threats=${threats}`;
 });
